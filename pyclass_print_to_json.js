@@ -1,40 +1,39 @@
 // making a python object print into workable json
 
 const example =
-""
+    ""
 
-const REPLACABLE_STRUCTURES = {
+const regexp_to_replace = {
     // tuples
-    "\\(([^=:]+?)\\)": "[$1]",
-
+    "datetime\\.datetime\\(([\\d,\\s]+).+?\\)": `"Date($1)"`,
+    "(?:[a-zA-Z0-9]+)?\\(([^=:]+?)\\)": "[$1]",
     // custom classes
-    "[a-zA-Z]+?\\((.+?)\\)": "{$1}",
-
+    "[a-zA-Z0-9]+?\\((.+?)\\)": "{$1}",
     // special marks/symbols
     "=": ":",
     "'": `"`,
     "([,\\[\\{\\s])([a-zA-Z0-9_]+):": `$1"$2":`,
-
     // keywords
     ":\\s?None": ":null",
     ":\\s?True": ":true",
-    ":\\s?False": ":false",
-    };
-
-
-const py_print_to_newstr = (str, REPLACABLE_STRUCTURES) => {
-    res = Object.entries(REPLACABLE_STRUCTURES).reduce((acc, curr) => {
-    re = new RegExp(curr[0], "g");
-    while (acc.match(re)) {
-        acc = acc.replaceAll(re, curr[1]);
-    }
-    return acc;
-    }, str);
-
-    return res;
+    ":\\s?False": ":false"
 }
 
-const res_str = py_print_to_newstr(example, REPLACABLE_STRUCTURES)
-const res_json = JSON.parse(res_str)
+const REPLACABLE_STRUCTURES = (str, regexp_list) => {
+    const as_str = Object.entries(regexp_list).reduce((acc, curr) => {
+        let re = new RegExp(curr[0], "g");
+        while (acc.match(re)) {
+            acc = acc.replaceAll(re, curr[1]);
+        }
+        return acc;
+    }, str);
+    //    console.log("pre: ", as_str)
 
-console.log(res_json)
+    res = JSON.parse(as_str)
+    //    console.log("post: ", res)
+    return res
+}
+
+
+let res = py_print_to_json(example, regexp_to_replace)
+console.log(res)
