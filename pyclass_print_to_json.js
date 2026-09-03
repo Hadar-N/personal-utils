@@ -9,6 +9,8 @@ const regexp_to_replace = {
     "(?:[a-zA-Z0-9]+)?\\(([^=:]+?)\\)": "[$1]",
     // custom classes
     "[a-zA-Z0-9]+?\\((.+?)\\)": "{$1}",
+    //enums
+    "<[A-Za-z_\.]+: ('[A-Za-z_]+')>": "$1",
     // special marks/symbols
     "=": ":",
     "'": `"`,
@@ -19,7 +21,7 @@ const regexp_to_replace = {
     ":\\s?False": ":false"
 }
 
-const REPLACABLE_STRUCTURES = (str, regexp_list) => {
+const py_print_to_json = (str, regexp_list) => {
     const as_str = Object.entries(regexp_list).reduce((acc, curr) => {
         let re = new RegExp(curr[0], "g");
         while (acc.match(re)) {
@@ -29,9 +31,7 @@ const REPLACABLE_STRUCTURES = (str, regexp_list) => {
     }, str);
     //    console.log("pre: ", as_str)
 
-    res = JSON.parse(as_str)
-    //    console.log("post: ", res)
-    return res
+    return JSON.parse(as_str)
 }
 
 
