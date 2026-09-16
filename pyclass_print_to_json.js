@@ -9,16 +9,16 @@ const regexp_to_replace = {
     "(?:[a-zA-Z0-9]+)?\\(([^=:]+?)\\)": "[$1]",
     // custom classes
     "[a-zA-Z0-9]+?\\((.+?)\\)": "{$1}",
-    //enums
+    // enums
     "<[A-Za-z_\.]+: ('[A-Za-z_]+')>": "$1",
     // special marks/symbols
     "=": ":",
     "'": `"`,
     "([,\\[\\{\\s])([a-zA-Z0-9_]+):": `$1"$2":`,
     // keywords
-    ":\\s?None": ":null",
-    ":\\s?True": ":true",
-    ":\\s?False": ":false"
+    "([:,\\[]])\\s?None": "$1 null",
+    "([:,\\[])\\s?True": "$1 true",
+    "([:,\\[])\\s?False": "$1 false"
 }
 
 const py_print_to_json = (str, regexp_list) => {
